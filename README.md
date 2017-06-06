@@ -31,3 +31,8 @@ The upstream vault image is mostly unmodified so it runs Vault in development by
 default (no auth necessary) and also respects the environment variable ``VAULT_DEV_ROOT_TOKEN_ID``.
 
 See https://hub.docker.com/_/vault/ for details.
+
+Docker Registry
+---------------
+
+https://quay.io/dollarshaveclub/vault-dev
