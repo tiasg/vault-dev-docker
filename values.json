@@ -1,0 +1,4 @@
+{
+  "secret/foo/bar": "baz",
+  "secret/something/else": "asdf1234"
+}
