@@ -28,9 +28,10 @@ sleep 1 # wait for Vault to come up
 # parse JSON array, populate Vault
 if [[ -f /opt/secrets.json ]]; then
   for path in $(jq -r 'keys[]' < /opt/secrets.json); do
-    local value=$(jq -r ".\"${path}\"" < /opt/secrets.json)
+    jq -r ".\"${path}\"" < /opt/secrets.json > /tmp/value
     echo "writing value to ${path}"
-    vault write "${path}" "value=${value}"
+    vault write "${path}" "value=@/tmp/value"
+    rm -f /tmp/value
   done
 else
   echo "/opt/secrets.json not found, skipping"

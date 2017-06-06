@@ -1,4 +1,6 @@
 {
   "secret/foo/bar": "baz",
-  "secret/something/else": "asdf1234"
+  "secret/something/else": "asdf1234",
+  "secret/omg": "asdf",
+  "secret/multiline": "asdf\nasdf\nasdf"
 }
