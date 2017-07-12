@@ -6,8 +6,9 @@ secrets for local development/testing. DO NOT USE FOR PRODUCTION PURPOSES.
 Secrets
 -------
 
-The JSON file at ``/opt/secrets.json`` (share in via a volume) will be read and written
-into the generic secret backend on startup.
+The JSON file at `/opt/secrets.json` (override with
+`$VAULT_SECRETS_FILE`) will be read and written into the generic
+secret backend on startup.
 
 The format is an object associating a path with value, as follows:
 

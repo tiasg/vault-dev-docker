@@ -9,6 +9,8 @@ rm -f /opt/healthcheck
 # VAULT_LOCAL_CONFIG below.
 VAULT_CONFIG_DIR=/vault/config
 
+VAULT_SECRETS_FILE=${VAULT_SECRETS_FILE:-"/opt/secrets.json"}
+
 # You can also set the VAULT_LOCAL_CONFIG environment variable to pass some
 # Vault configuration JSON without having to bind any volumes.
 if [ -n "$VAULT_LOCAL_CONFIG" ]; then
@@ -26,15 +28,15 @@ vault server \
 sleep 1 # wait for Vault to come up
 
 # parse JSON array, populate Vault
-if [[ -f /opt/secrets.json ]]; then
-  for path in $(jq -r 'keys[]' < /opt/secrets.json); do
-    jq -rj ".\"${path}\"" < /opt/secrets.json > /tmp/value
+if [[ -f "$VAULT_SECRETS_FILE" ]]; then
+  for path in $(jq -r 'keys[]' < "$VAULT_SECRETS_FILE"); do
+    jq -rj ".\"${path}\"" < "$VAULT_SECRETS_FILE" > /tmp/value
     echo "writing value to ${path}"
     vault write "${path}" "value=@/tmp/value"
     rm -f /tmp/value
   done
 else
-  echo "/opt/secrets.json not found, skipping"
+  echo "$VAULT_SECRETS_FILE not found, skipping"
 fi
 
 # docker healthcheck
