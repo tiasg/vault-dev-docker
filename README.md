@@ -20,6 +20,13 @@ The format is an object associating a path with value, as follows:
 
 ```
 
+Backends
+--------
+
+The following backends can be enabled by setting the appropriate
+environment variable to `1`:
+- App ID: `$VAULT_USE_APP_ID`
+
 Healthcheck
 -----------
 The native Docker healthcheck will return healthy when all configured secrets have been
