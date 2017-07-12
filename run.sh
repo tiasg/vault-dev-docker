@@ -39,6 +39,11 @@ else
   echo "$VAULT_SECRETS_FILE not found, skipping"
 fi
 
+# Optionally install the app id backend.
+if [ -n "$VAULT_USE_APP_ID" ]; then
+    vault auth-enable app-id
+fi
+
 # docker healthcheck
 touch /opt/healthcheck
 
