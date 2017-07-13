@@ -47,6 +47,18 @@ setting the file at `/opt/app-id.json` (override with
 ]
 ```
 
+Policies
+--------
+
+Policies can be created by specifying the file at `/opt/policies.json`
+(override with `$VAULT_POLICIES_FILE`) as follows:
+
+```json
+{
+  "policy1": "path \"secret/*\" { policy = \"write\" }"
+}
+```
+
 Healthcheck
 -----------
 The native Docker healthcheck will return healthy when all configured secrets have been
