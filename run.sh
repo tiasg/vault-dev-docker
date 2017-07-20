@@ -10,6 +10,8 @@ rm -f /opt/healthcheck
 VAULT_CONFIG_DIR=/vault/config
 
 VAULT_SECRETS_FILE=${VAULT_SECRETS_FILE:-"/opt/secrets.json"}
+VAULT_APP_ID_FILE=${VAULT_APP_ID_FILE:-"/opt/app-id.json"}
+VAULT_POLICIES_FILE=${VAULT_POLICIES_FILE:-"/opt/policies.json"}
 
 # You can also set the VAULT_LOCAL_CONFIG environment variable to pass some
 # Vault configuration JSON without having to bind any volumes.
@@ -42,6 +44,29 @@ fi
 # Optionally install the app id backend.
 if [ -n "$VAULT_USE_APP_ID" ]; then
     vault auth-enable app-id
+
+    if [[ -f "$VAULT_APP_ID_FILE" ]]; then
+	for appID in $(jq -rc '.[]' < "$VAULT_APP_ID_FILE"); do
+	    name=$(echo "$appID" | jq -r ".name")
+	    policy=$(echo "$appID" | jq -r ".policy")
+	    echo "creating AppID policy with user ID $name for policy $policy"
+	    vault write auth/app-id/map/app-id/$name value=$policy display_name=$name
+	done
+    else
+	echo "$VAULT_APP_ID_FILE not found, skipping"
+    fi
+fi
+
+# Create any policies.
+if [[ -f "$VAULT_POLICIES_FILE" ]]; then
+    for policy in $(jq -r 'keys[]' < "$VAULT_POLICIES_FILE"); do
+	jq -rj ".\"${policy}\"" < "$VAULT_POLICIES_FILE" > /tmp/value
+	echo "creating vault policy $policy"
+	vault policy-write "${policy}" /tmp/value
+	rm -f /tmp/value
+    done
+else
+  echo "$VAULT_POLICIES_FILE not found, skipping"
 fi
 
 # docker healthcheck

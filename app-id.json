@@ -1,0 +1,10 @@
+[
+  {
+    "name": "app-id-1",
+    "policy": "root"
+  },
+  {
+    "name": "app-id-2",
+    "policy": "root"
+  }
+]
