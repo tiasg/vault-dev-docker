@@ -49,8 +49,13 @@ if [ -n "$VAULT_USE_APP_ID" ]; then
 	for appID in $(jq -rc '.[]' < "$VAULT_APP_ID_FILE"); do
 	    name=$(echo "$appID" | jq -r ".name")
 	    policy=$(echo "$appID" | jq -r ".policy")
-	    echo "creating AppID policy with user ID $name for policy $policy"
+	    echo "creating AppID policy with app ID $name for policy $policy"
 	    vault write auth/app-id/map/app-id/$name value=$policy display_name=$name
+      for userID in $(echo "$appID" | jq -r ".user_ids[]"); do
+        name=$(echo "$appID" | jq -r ".name")
+        echo "...creating user ID $userID for AppID $name"
+        vault write auth/app-id/map/user-id/${userID} value=${name}
+      done
 	done
     else
 	echo "$VAULT_APP_ID_FILE not found, skipping"
