@@ -38,11 +38,19 @@ setting the file at `/opt/app-id.json` (override with
 [
   {
     "name": "app-id-1",
-    "policy": "root"
+    "policy": "root",
+    "user_ids": [
+      "asdf",
+      "qwerty"
+    ]
   },
   {
     "name": "app-id-2",
-    "policy": "root"
+    "policy": "root",
+    "user_ids": [
+      "mary",
+      "fred"
+    ]
   }
 ]
 ```
