@@ -43,10 +43,9 @@ fi
 
 # Optionally install the app id backend.
 if [ -n "$VAULT_USE_APP_ID" ]; then
-    vault auth-enable app-id
-
-    if [[ -f "$VAULT_APP_ID_FILE" ]]; then
-	for appID in $(jq -rc '.[]' < "$VAULT_APP_ID_FILE"); do
+  vault auth-enable app-id
+  if [[ -f "$VAULT_APP_ID_FILE" ]]; then
+  	for appID in $(jq -rc '.[]' < "$VAULT_APP_ID_FILE"); do
 	    name=$(echo "$appID" | jq -r ".name")
 	    policy=$(echo "$appID" | jq -r ".policy")
 	    echo "creating AppID policy with app ID $name for policy $policy"
@@ -56,20 +55,20 @@ if [ -n "$VAULT_USE_APP_ID" ]; then
         echo "...creating user ID $userID for AppID $name"
         vault write auth/app-id/map/user-id/${userID} value=${name}
       done
-	done
-    else
-	echo "$VAULT_APP_ID_FILE not found, skipping"
-    fi
+  	done
+  else
+    echo "$VAULT_APP_ID_FILE not found, skipping"
+  fi
 fi
 
 # Create any policies.
 if [[ -f "$VAULT_POLICIES_FILE" ]]; then
-    for policy in $(jq -r 'keys[]' < "$VAULT_POLICIES_FILE"); do
-	jq -rj ".\"${policy}\"" < "$VAULT_POLICIES_FILE" > /tmp/value
-	echo "creating vault policy $policy"
-	vault policy-write "${policy}" /tmp/value
-	rm -f /tmp/value
-    done
+  for policy in $(jq -r 'keys[]' < "$VAULT_POLICIES_FILE"); do
+  	jq -rj ".\"${policy}\"" < "$VAULT_POLICIES_FILE" > /tmp/value
+  	echo "creating vault policy $policy"
+  	vault policy-write "${policy}" /tmp/value
+  	rm -f /tmp/value
+  done
 else
   echo "$VAULT_POLICIES_FILE not found, skipping"
 fi
