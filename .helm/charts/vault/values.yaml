@@ -22,22 +22,15 @@ nameOverride:
 
 enable_k8s_auth: true
 
-secrets_json: |
-    {
-      "secret/something": "asdf"
-    }
+secrets:
+  secret/something: "asdf"
 
-policies_json: |
-  {
-    "policy1": "path \"secret/*\" { policy = \"write\" }"
-  }
+policies:
+  policy1: "path \"secret/*\" { policy = \"write\" }"
 
-k8sroles_json: |
-  [
-    {
-        "name": "k8sauth",
-        "service_accounts": "default",
-        "namespaces": "default",
-        "policies": "policy1"
-    }
-  ]
+k8sroles:
+  - name: k8sauth
+    service_accounts: default
+    namespaces: default
+    policies: policy1
+

@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: vault
 data:
-  secrets.json: {{ .Values.secrets_json |toJson }}
+  secrets.json: '{{ .Values.secrets |toJson }}'
 {{- if .Values.enable_k8s_auth }}
-  policies.json: {{ .Values.policies_json |toJson }}
-  k8sroles.json: {{ .Values.k8sroles_json |toJson }}
+  policies.json: '{{ .Values.policies |toJson }}'
+  k8sroles.json: '{{ .Values.k8sroles |toJson }}'
 {{- end -}}
