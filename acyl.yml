@@ -1,0 +1,14 @@
+version: 2
+
+target_branches:
+  - master
+  
+application:
+  chart_path: '.helm/charts/vault'
+  chart_vars_path: '.helm/charts/vault/values.yaml'
+  image: quay.io/dollarshaveclub/vault-dev
+
+
+dependencies:
+  direct:
+
