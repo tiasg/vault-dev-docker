@@ -21,6 +21,7 @@ fullnameOverride:
 nameOverride:
 
 enable_k8s_auth: true
+k8s_host: "https://kubernetes.default"
 
 secrets:
   secret/something: "asdf"

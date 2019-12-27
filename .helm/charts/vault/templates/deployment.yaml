@@ -35,6 +35,8 @@ spec:
           {{- if .Values.enable_k8s_auth }}
             - name: VAULT_USE_K8S
               value: "1"
+            - name: VAULT_K8S_HOST
+              value: "{{ .Values.k8s_host }}"
             - name: VAULT_POLICIES_FILE
               value: /vault-secrets/policies.json
             - name: VAULT_K8SROLES_FILE
