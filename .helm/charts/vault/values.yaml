@@ -28,10 +28,13 @@ secrets:
 
 policies:
   policy1: "path \"secret/*\" { policy = \"write\" }"
+  # policies to allow role and policy management
+  policy2: "path \"auth/*\" { capabilities = [\"sudo\",\"create\",\"update\"]}"
+  policy3: "path \"sys/policy/*\" { capabilities = [\"sudo\",\"create\",\"update\"] }"
 
 k8sroles:
   - name: k8sauth
     service_accounts: default
     namespaces: default
-    policies: policy1
+    policies: policy1,policy2,policy3
 
