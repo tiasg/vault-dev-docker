@@ -29,8 +29,8 @@ secrets:
 policies:
   policy1: "path \"secret/*\" { policy = \"write\" }"
   # policies to allow role and policy management
-  policy2: "path \"auth/*\" { capabilities = [\"sudo\",\"create\",\"update\"]}"
-  policy3: "path \"sys/policy/*\" { capabilities = [\"sudo\",\"create\",\"update\"] }\npath \"sys/policies/*\" { capabilities = [\"sudo\",\"create\",\"update\"] }"
+  policy2: "path \"auth/*\" { capabilities = [\"sudo\",\"create\",\"update\",\"read\"]}"
+  policy3: "path \"sys/policy/*\" { capabilities = [\"sudo\",\"create\",\"update\",\"read\"] }\npath \"sys/policies/*\" { capabilities = [\"sudo\",\"create\",\"update\",\"read\"] }"
 
 k8sroles:
   - name: k8sauth
