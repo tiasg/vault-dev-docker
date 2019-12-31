@@ -20,15 +20,42 @@ The format is an object associating a path with value, as follows:
 
 ```
 
+Helm Chart
+----------
+
+There is a bundled [Helm](https://helm.sh) chart included at `.helm/charts/vault`. See values.yaml for configuration.
+
 Backends
 --------
 
 The following backends can be enabled by setting the appropriate
 environment variable to `1`:
 - App ID: `$VAULT_USE_APP_ID`
+- Kubernetes: `$VAULT_USE_K8S`
 
-App ID
-------
+Kubernetes
+----------
+
+Kubernets auth is supported but will only function when the container is running within a k8s pod. Set `$VAULT_USE_K8S` to "1" to enable the backend.
+
+The following environment variables are supported:
+
+- VAULT_CA_CERT - This is the CA certificate bundle data for [clients of the Kubernetes API](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod), or the default value "@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt" will read it from the filesystem.
+- VAULT_K8S_HOST - Kubernetes API hostname (default: https://kubernetes.default)
+- VAULT_K8SROLES_FILE - JSON file containing one or more [Vault k8s auth roles](https://www.vaultproject.io/api/auth/kubernetes/index.html#create-role), in the following format (every field except name accepts multiple comma-separated values):
+  ```json
+  [
+    {
+        "name": "k8sauth",
+        "service_accounts": "default,default2",
+        "namespaces": "default,default2",
+        "policies": "policy1,policy2"
+    }
+  ]
+  ```
+
+App ID (deprecated)
+-------------------
 
 If the app ID backend is enabled, app ID profiles can be created by
 setting the file at `/opt/app-id.json` (override with
