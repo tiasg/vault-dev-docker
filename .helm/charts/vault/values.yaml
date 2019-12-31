@@ -1,0 +1,40 @@
+# Default values for vault.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+image:
+  repository: quay.io/dollarshaveclub/vault-dev
+  tag: master
+  pullPolicy: IfNotPresent
+
+service:
+  name: http
+  type: ClusterIP
+  ports:
+    internalPort: 8200
+    externalPort: 8200
+
+keyPrefix: secret/
+
+fullnameOverride:
+nameOverride:
+
+enable_k8s_auth: true
+k8s_host: "https://kubernetes.default"
+
+secrets:
+  secret/something: "asdf"
+
+policies:
+  policy1: "path \"secret/*\" { policy = \"write\" }"
+  # policies to allow role and policy management
+  policy2: "path \"auth/*\" { capabilities = [\"sudo\",\"create\",\"update\",\"read\"]}"
+  policy3: "path \"sys/policy/*\" { capabilities = [\"sudo\",\"create\",\"update\",\"read\"] }\npath \"sys/policies/*\" { capabilities = [\"sudo\",\"create\",\"update\",\"read\"] }"
+
+k8sroles:
+  - name: k8sauth
+    service_accounts: default
+    namespaces: default
+    policies: policy1,policy2,policy3
+
