@@ -35,11 +35,23 @@ vault secrets enable -version=1 -path=secret -description='local secrets' kv
 
 # parse JSON array, populate Vault
 if [[ -f "$VAULT_SECRETS_FILE" ]]; then
-  for path in $(jq -r 'keys[]' < "$VAULT_SECRETS_FILE"); do
-    jq -rj ".\"${path}\"" < "$VAULT_SECRETS_FILE" > /tmp/value
-    echo "writing value to ${path}"
-    vault kv put "${path}" "value=@/tmp/value"
-    rm -f /tmp/value
+  for path in $(jq -r 'keys[]' <"$VAULT_SECRETS_FILE"); do
+      jq -rj ".\"${path}\"" <"$VAULT_SECRETS_FILE" >/tmp/value
+
+      if cat /tmp/value | jq -e >/dev/null 2>&1; then
+        echo "Value is JSON, adding properties as (key,value) pairs"
+        res=$(for key in $(jq -r 'keys[]' </tmp/value); do
+          value=$(jq -rj ".\"${key}\"" </tmp/value)
+          echo "${key}=${value}"
+        done)
+
+        vault kv put "${path}" ${res}
+      else
+        echo "Value is not in JSON, using 'value' as key'"
+        vault kv put "${path}" "value=@/tmp/value"
+      fi
+
+      rm -f /tmp/value
   done
 else
   echo "$VAULT_SECRETS_FILE not found, skipping"
